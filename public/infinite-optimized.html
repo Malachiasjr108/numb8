@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Infinite - 8 Sacred Echoes | Numb8</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="portal.css">
+  <style>
+    .ring-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+    .nft-ring-infinite{position:relative;overflow:hidden;transition:all 0.3s ease;width:180px;height:180px;margin:20px;}
+    .nft-ring-infinite.locked{opacity:0.2;filter:grayscale(100%) blur(3px);}
+    .nft-ring-infinite.unlocked{cursor:pointer;animation:pulse 2s infinite;}
+    .nft-ring-infinite.unlocked:hover{transform:scale(1.2);box-shadow:0 0 40px rgba(255,215,0,0.9);}
+    .nft-grid-infinite{display:flex;flex-wrap:wrap;justify-content:center;padding:60px 20px;}
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255,215,0,0.4); }
+      50% { box-shadow: 0 0 40px rgba(255,215,0,0.8); }
+    }
+  </style>
+</head>
+<body class="cosmic-bg" style="background: url('assets/images/numb8-cosmic-bg.webp') no-repeat center center fixed; background-size: cover;">
+  
+  <a href="index.html" class="back-btn">⟵ Back to Home</a>
+  
+  <section class="content">
+    <div class="lore">
+      <h1>The Infinite</h1>
+      <p>At last, you have arrived. The Infinite — 8 supreme Echoes that hold the keys to eternal cosmic wisdom.</p>
+    </div>
+    
+    <div class="narrative">
+      <p>Only the most dedicated seekers may witness The Infinite. These 8 sacred fragments represent the ultimate ascension. 
+      Each one is a gateway to understanding the true nature of <strong>Numb8</strong> and the cosmic order of <strong>888</strong>.</p>
+    </div>
+
+    <div class="counter-box">
+      <h2>Next revelation in:</h2>
+      <div id="countdown-infinite" class="countdown">Loading...</div>
+    </div>
+
+    <div class="nft-grid-infinite" id="infiniteGrid">
+      <!-- 8 Sacred Circles will be generated dynamically -->
+    </div>
+  </section>
+
+  <footer style="text-align:center; margin-top:60px; padding:20px;">
+    <p style="font-family:Orbitron, sans-serif; font-size:0.9em; color:#fff; text-shadow:0 0 10px #00ccff, 0 0 20px #a55cff;">
+      © 2025 108 Studio Art | 
+      <a href="security.html" style="color:#00ccff; text-decoration:none;">Privacy Policy</a> | 
+      <a href="termsgeneral.html" style="color:#a55cff; text-decoration:none;">Terms of Service</a>
+    </p>
+  </footer>
+
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import { collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const infiniteGrid = document.getElementById('infiniteGrid');
+    const singleImagePath = 'assets/portal/1/image.webp';
+    let echoImages = {};
+
+    // Load custom echo images from API
+    async function loadEchoImages() {
+      try {
+        const response = await fetch('/api/echoes/list');
+        const data = await response.json();
+        
+        if (data.images && Array.isArray(data.images)) {
+          data.images.forEach(img => {
+            echoImages[img.echoNumber] = img.imageUrl;
+          });
+        }
+      } catch (error) {
+        console.error('Error loading custom echo images:', error);
+      }
+    }
+
+    async function loadInfiniteEchoes() {
+      try {
+        // Load custom images first
+        await loadEchoImages();
+
+        const settingsDoc = await getDoc(doc(db, 'settings', 'infinite'));
+        const settings = settingsDoc.data();
+        
+        if (settings && settings.nextUnlock) {
+          startCountdown('countdown-infinite', settings.nextUnlock.toDate());
+        }
+
+        const infiniteSnapshot = await getDocs(collection(db, 'infinite'));
+        const infiniteData = {};
+        infiniteSnapshot.forEach(doc => {
+          infiniteData[doc.id] = doc.data();
+        });
+
+        for (let i = 1; i <= 8; i++) {
+          const echoNumber = 880 + i; // Infinite Echoes are 881-888
+          const circleDiv = document.createElement('div');
+          const isUnlocked = infiniteData[i] && infiniteData[i].unlocked;
+          
+          // Use custom image if available, otherwise use default
+          const imageSrc = echoImages[echoNumber] || singleImagePath;
+          
+          circleDiv.className = `nft-ring-infinite ${isUnlocked ? 'unlocked' : 'locked'}`;
+          circleDiv.innerHTML = `<img class="ring-photo" alt="Infinite Echo ${echoNumber}" src="${imageSrc}" loading="lazy">`;
+          
+          if (isUnlocked) {
+            circleDiv.onclick = () => alert(`Infinite Echo ${echoNumber} - Supreme cosmic truth revealed!`);
+          }
+          
+          infiniteGrid.appendChild(circleDiv);
+        }
+      } catch (error) {
+        console.error('Error loading infinite:', error);
+        for (let i = 1; i <= 8; i++) {
+          const echoNumber = 880 + i;
+          const circleDiv = document.createElement('div');
+          circleDiv.className = 'nft-ring-infinite locked';
+          const imageSrc = echoImages[echoNumber] || singleImagePath;
+          circleDiv.innerHTML = `<img class="ring-photo" alt="Infinite Echo ${echoNumber}" src="${imageSrc}" loading="lazy">`;
+          infiniteGrid.appendChild(circleDiv);
+        }
+      }
+    }
+
+    function startCountdown(elementId, targetDate) {
+      const countdownEl = document.getElementById(elementId);
+      
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate.getTime() - now;
+
+        if (distance < 0) {
+          countdownEl.textContent = 'UNLOCKING NOW!';
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownEl.textContent = `${days} DAYS : ${hours} HOURS : ${minutes} MIN : ${seconds} SEC`;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }
+
+    loadInfiniteEchoes();
+  </script>
+</body>
+</html>

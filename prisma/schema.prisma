@@ -1,0 +1,78 @@
+generator client {
+    provider = "prisma-client-js"
+    binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+    output = "/home/ubuntu/numb8_app/nextjs_space/node_modules/.prisma/client"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+// Echo images - stores uploaded images for each Echo (1-888)
+model EchoImage {
+  id                Int      @id @default(autoincrement())
+  echoNumber        Int      @unique
+  cloudStoragePath  String
+  uploadedAt        DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@index([echoNumber])
+}
+
+// Portal Echoes (1-800)
+model PortalEcho {
+  id        Int      @id @default(autoincrement())
+  echoNumber Int     @unique
+  unlocked  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([unlocked])
+}
+
+// Circle Echoes (1-80)
+model CircleEcho {
+  id        Int      @id @default(autoincrement())
+  echoNumber Int     @unique
+  unlocked  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([unlocked])
+}
+
+// Infinite Echoes (1-8)
+model InfiniteEcho {
+  id        Int      @id @default(autoincrement())
+  echoNumber Int     @unique
+  unlocked  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([unlocked])
+}
+
+// Settings for timers and global config
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([key])
+}
+
+// Users management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([role])
+}

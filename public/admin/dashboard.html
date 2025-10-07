@@ -1,0 +1,806 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Numb8 Admin Dashboard</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Orbitron', sans-serif;
+      background: #0a0a1a;
+      color: #fff;
+      padding: 20px;
+    }
+
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .admin-header {
+      background: linear-gradient(135deg, #1a1a3e 0%, #0f0f2e 100%);
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      border: 2px solid #00ccff;
+      box-shadow: 0 0 30px rgba(0,204,255,0.3);
+    }
+
+    .admin-header h1 {
+      color: #00ccff;
+      text-shadow: 0 0 20px #00ccff;
+      margin-bottom: 10px;
+    }
+
+    .logout-btn {
+      background: #ff4444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      float: right;
+    }
+
+    .logout-btn:hover {
+      background: #cc0000;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #1e1e3f 0%, #2a2a4a 100%);
+      padding: 25px;
+      border-radius: 12px;
+      border: 2px solid #a55cff;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(165,92,255,0.4);
+    }
+
+    .stat-card h3 {
+      color: #a55cff;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .stat-card .number {
+      font-size: 36px;
+      color: #00ccff;
+      font-weight: bold;
+      text-shadow: 0 0 15px #00ccff;
+    }
+
+    .control-panel {
+      background: linear-gradient(135deg, #1a1a3e 0%, #0f0f2e 100%);
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      border: 2px solid #00ccff;
+    }
+
+    .control-panel h2 {
+      color: #00ccff;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ccff;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: #2a2a4a;
+      color: #fff;
+      border: 2px solid #00ccff;
+      padding: 12px 25px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      transition: all 0.3s;
+    }
+
+    .tab-btn:hover, .tab-btn.active {
+      background: #00ccff;
+      color: #0a0a1a;
+      box-shadow: 0 0 20px #00ccff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #a55cff;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      max-width: 400px;
+      padding: 12px;
+      background: #1e1e3f;
+      border: 2px solid #a55cff;
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #00ccff 0%, #a55cff 100%);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
+      transition: transform 0.3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0,204,255,0.6);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+    }
+
+    .circles-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 20px;
+      background: #1e1e3f;
+      border-radius: 8px;
+    }
+
+    .circle-item {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      cursor: pointer;
+      border: 2px solid;
+      transition: all 0.3s;
+    }
+
+    .circle-item.unlocked {
+      background: #00ff88;
+      border-color: #00ff88;
+      color: #000;
+    }
+
+    .circle-item.locked {
+      background: #333;
+      border-color: #666;
+      color: #999;
+    }
+
+    .circle-item:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 15px currentColor;
+    }
+
+    .bulk-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #00ccff;
+      font-size: 18px;
+    }
+
+    .success-msg {
+      background: #00ff88;
+      color: #000;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .error-msg {
+      background: #ff4444;
+      color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    #loginForm {
+      max-width: 400px;
+      margin: 100px auto;
+      background: linear-gradient(135deg, #1a1a3e 0%, #0f0f2e 100%);
+      padding: 40px;
+      border-radius: 15px;
+      border: 2px solid #00ccff;
+    }
+
+    #loginForm h2 {
+      color: #00ccff;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 0 20px #00ccff;
+    }
+
+    #adminPanel {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login Form -->
+  <div id="loginForm">
+    <h2>🔮 Numb8 Admin Login</h2>
+    <div class="error-msg" id="loginError"></div>
+    <div class="form-group">
+      <label>Email:</label>
+      <input type="email" id="loginEmail" placeholder="admin@numb8.com">
+    </div>
+    <div class="form-group">
+      <label>Password:</label>
+      <input type="password" id="loginPassword" placeholder="••••••••">
+    </div>
+    <button class="btn" onclick="handleLogin()" style="width:100%;">Login</button>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminPanel">
+    <div class="admin-container">
+      <div class="admin-header">
+        <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        <h1>🔮 Numb8 Admin Dashboard</h1>
+        <p>Control Panel for Portal (800), Circle (80) & Infinite (8)</p>
+      </div>
+
+      <div class="success-msg" id="successMsg"></div>
+      <div class="error-msg" id="errorMsg"></div>
+
+      <!-- Statistics -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Portal Unlocked</h3>
+          <div class="number" id="portalUnlocked">0</div>
+          <p>/ 800</p>
+        </div>
+        <div class="stat-card">
+          <h3>Circle Unlocked</h3>
+          <div class="number" id="circleUnlocked">0</div>
+          <p>/ 80</p>
+        </div>
+        <div class="stat-card">
+          <h3>Infinite Unlocked</h3>
+          <div class="number" id="infiniteUnlocked">0</div>
+          <p>/ 8</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Users</h3>
+          <div class="number" id="totalUsers">0</div>
+          <p>Registered</p>
+        </div>
+      </div>
+
+      <!-- Control Panel -->
+      <div class="control-panel">
+        <h2>🎨 Echo Image Management</h2>
+        <div style="margin-top: 20px;">
+          <a href="echo-uploader.html" style="display: inline-block; background: linear-gradient(135deg, #00ccff 0%, #a55cff 100%); color: white; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            📸 Upload Echo Images
+          </a>
+          <p style="color: #999; font-size: 12px; margin-top: 10px;">Manage images for all 888 Echoes (Portal, Circle, Infinite)</p>
+        </div>
+      </div>
+
+      <div class="control-panel" style="display: none;">
+        <h2>⚙️ Control Panel</h2>
+        
+        <div class="tab-buttons">
+          <button class="tab-btn active" onclick="showTab('portal')">The Portal (800)</button>
+          <button class="tab-btn" onclick="showTab('circle')">The Circle (80)</button>
+          <button class="tab-btn" onclick="showTab('infinite')">The Infinite (8)</button>
+          <button class="tab-btn" onclick="showTab('users')">Users Management</button>
+          <button class="tab-btn" onclick="showTab('settings')">Global Settings</button>
+        </div>
+
+        <!-- Portal Tab -->
+        <div id="portal-tab" class="tab-content active">
+          <h3>The Portal - 800 Echoes</h3>
+          
+          <div class="form-group">
+            <label>Next Unlock Date (111 circles every 8 days):</label>
+            <input type="datetime-local" id="portalNextUnlock">
+            <button class="btn" onclick="updateCountdown('portal')" style="margin-left:10px;">Update</button>
+          </div>
+
+          <div class="bulk-actions">
+            <button class="btn" onclick="unlockBulk('portal', 111)">Unlock Next 111</button>
+            <button class="btn" onclick="unlockBulk('portal', 800)">Unlock All 800</button>
+            <button class="btn btn-danger" onclick="lockAll('portal')">Lock All</button>
+          </div>
+
+          <div class="circles-grid" id="portalCircles">
+            <div class="loading">Loading Portal circles...</div>
+          </div>
+        </div>
+
+        <!-- Circle Tab -->
+        <div id="circle-tab" class="tab-content">
+          <h3>The Circle - 80 Echoes</h3>
+          
+          <div class="form-group">
+            <label>Next Unlock Date:</label>
+            <input type="datetime-local" id="circleNextUnlock">
+            <button class="btn" onclick="updateCountdown('circle')" style="margin-left:10px;">Update</button>
+          </div>
+
+          <div class="bulk-actions">
+            <button class="btn" onclick="unlockBulk('circle', 10)">Unlock Next 10</button>
+            <button class="btn" onclick="unlockBulk('circle', 80)">Unlock All 80</button>
+            <button class="btn btn-danger" onclick="lockAll('circle')">Lock All</button>
+          </div>
+
+          <div class="circles-grid" id="circleCircles">
+            <div class="loading">Loading Circle echoes...</div>
+          </div>
+        </div>
+
+        <!-- Infinite Tab -->
+        <div id="infinite-tab" class="tab-content">
+          <h3>The Infinite - 8 Sacred Echoes</h3>
+          
+          <div class="form-group">
+            <label>Next Unlock Date:</label>
+            <input type="datetime-local" id="infiniteNextUnlock">
+            <button class="btn" onclick="updateCountdown('infinite')" style="margin-left:10px;">Update</button>
+          </div>
+
+          <div class="bulk-actions">
+            <button class="btn" onclick="unlockBulk('infinite', 8)">Unlock All 8</button>
+            <button class="btn btn-danger" onclick="lockAll('infinite')">Lock All</button>
+          </div>
+
+          <div class="circles-grid" id="infiniteCircles" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="loading">Loading Infinite echoes...</div>
+          </div>
+        </div>
+
+        <!-- Users Tab -->
+        <div id="users-tab" class="tab-content">
+          <h3>Users Management</h3>
+          <div id="usersList">
+            <div class="loading">Loading users...</div>
+          </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings-tab" class="tab-content">
+          <h3>Global Settings</h3>
+          
+          <div class="form-group">
+            <label>Portal Auto-Unlock Interval (days):</label>
+            <input type="number" id="portalInterval" value="8">
+          </div>
+
+          <div class="form-group">
+            <label>Portal Unlock Batch Size:</label>
+            <input type="number" id="portalBatchSize" value="111">
+          </div>
+
+          <button class="btn" onclick="saveGlobalSettings()">Save Global Settings</button>
+
+          <hr style="margin: 30px 0; border-color: #333;">
+
+          <h3>Initialize Database</h3>
+          <p style="color: #ff4444; margin: 10px 0;">⚠️ Warning: This will reset all data!</p>
+          <button class="btn btn-danger" onclick="initializeDatabase()">Initialize Firestore Collections</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { db, auth } from '../firebase-config.js';
+    import { 
+      collection, 
+      doc, 
+      getDoc, 
+      getDocs, 
+      setDoc, 
+      updateDoc, 
+      writeBatch,
+      Timestamp 
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { 
+      signInWithEmailAndPassword, 
+      signOut,
+      onAuthStateChanged 
+    } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    // Make functions global
+    window.handleLogin = handleLogin;
+    window.handleLogout = handleLogout;
+    window.showTab = showTab;
+    window.toggleCircle = toggleCircle;
+    window.unlockBulk = unlockBulk;
+    window.lockAll = lockAll;
+    window.updateCountdown = updateCountdown;
+    window.saveGlobalSettings = saveGlobalSettings;
+    window.initializeDatabase = initializeDatabase;
+
+    // Auth state listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        loadDashboard();
+      } else {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('adminPanel').style.display = 'none';
+      }
+    });
+
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        showSuccess('Login successful!');
+      } catch (error) {
+        showError('Login failed: ' + error.message);
+        document.getElementById('loginError').textContent = error.message;
+        document.getElementById('loginError').style.display = 'block';
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        await signOut(auth);
+        showSuccess('Logged out successfully');
+      } catch (error) {
+        showError('Logout failed: ' + error.message);
+      }
+    }
+
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    async function loadDashboard() {
+      await loadStats();
+      await loadCircles('portal', 800);
+      await loadCircles('circle', 80);
+      await loadCircles('infinite', 8);
+      await loadCountdowns();
+    }
+
+    async function loadStats() {
+      try {
+        const collections = ['portal', 'circle', 'infinite'];
+        const stats = {};
+
+        for (const coll of collections) {
+          const snapshot = await getDocs(collection(db, coll));
+          let unlocked = 0;
+          snapshot.forEach(doc => {
+            if (doc.data().unlocked) unlocked++;
+          });
+          stats[coll] = unlocked;
+        }
+
+        document.getElementById('portalUnlocked').textContent = stats.portal || 0;
+        document.getElementById('circleUnlocked').textContent = stats.circle || 0;
+        document.getElementById('infiniteUnlocked').textContent = stats.infinite || 0;
+
+        const usersSnapshot = await getDocs(collection(db, 'users'));
+        document.getElementById('totalUsers').textContent = usersSnapshot.size;
+      } catch (error) {
+        console.error('Error loading stats:', error);
+      }
+    }
+
+    async function loadCircles(type, count) {
+      const grid = document.getElementById(`${type}Circles`);
+      grid.innerHTML = '';
+
+      try {
+        const snapshot = await getDocs(collection(db, type));
+        const data = {};
+        snapshot.forEach(doc => {
+          data[doc.id] = doc.data();
+        });
+
+        for (let i = 1; i <= count; i++) {
+          const circle = document.createElement('div');
+          const isUnlocked = data[i] && data[i].unlocked;
+          circle.className = `circle-item ${isUnlocked ? 'unlocked' : 'locked'}`;
+          circle.textContent = i;
+          circle.onclick = () => toggleCircle(type, i, !isUnlocked);
+          grid.appendChild(circle);
+        }
+      } catch (error) {
+        console.error(`Error loading ${type}:`, error);
+        grid.innerHTML = '<p style="color:#ff4444;">Error loading data. Click "Initialize Database" in Settings.</p>';
+      }
+    }
+
+    async function toggleCircle(type, id, unlock) {
+      try {
+        await setDoc(doc(db, type, String(id)), {
+          unlocked: unlock,
+          updatedAt: Timestamp.now()
+        }, { merge: true });
+
+        await loadCircles(type, type === 'portal' ? 800 : type === 'circle' ? 80 : 8);
+        await loadStats();
+        showSuccess(`${type} Echo ${id} ${unlock ? 'unlocked' : 'locked'}!`);
+      } catch (error) {
+        showError('Error updating circle: ' + error.message);
+      }
+    }
+
+    async function unlockBulk(type, count) {
+      if (!confirm(`Unlock next ${count} ${type} echoes?`)) return;
+
+      try {
+        const snapshot = await getDocs(collection(db, type));
+        const data = {};
+        snapshot.forEach(doc => {
+          data[doc.id] = doc.data();
+        });
+
+        const batch = writeBatch(db);
+        let unlocked = 0;
+
+        const maxCount = type === 'portal' ? 800 : type === 'circle' ? 80 : 8;
+        
+        for (let i = 1; i <= maxCount && unlocked < count; i++) {
+          if (!data[i] || !data[i].unlocked) {
+            const docRef = doc(db, type, String(i));
+            batch.set(docRef, {
+              unlocked: true,
+              updatedAt: Timestamp.now()
+            }, { merge: true });
+            unlocked++;
+          }
+        }
+
+        await batch.commit();
+        await loadCircles(type, maxCount);
+        await loadStats();
+        showSuccess(`Unlocked ${unlocked} ${type} echoes!`);
+      } catch (error) {
+        showError('Error unlocking: ' + error.message);
+      }
+    }
+
+    async function lockAll(type) {
+      if (!confirm(`Lock all ${type} echoes? This cannot be undone!`)) return;
+
+      try {
+        const maxCount = type === 'portal' ? 800 : type === 'circle' ? 80 : 8;
+        const batch = writeBatch(db);
+
+        for (let i = 1; i <= maxCount; i++) {
+          const docRef = doc(db, type, String(i));
+          batch.set(docRef, {
+            unlocked: false,
+            updatedAt: Timestamp.now()
+          }, { merge: true });
+        }
+
+        await batch.commit();
+        await loadCircles(type, maxCount);
+        await loadStats();
+        showSuccess(`All ${type} echoes locked!`);
+      } catch (error) {
+        showError('Error locking: ' + error.message);
+      }
+    }
+
+    async function loadCountdowns() {
+      const types = ['portal', 'circle', 'infinite'];
+      
+      for (const type of types) {
+        try {
+          const docRef = doc(db, 'settings', type);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists() && docSnap.data().nextUnlock) {
+            const date = docSnap.data().nextUnlock.toDate();
+            const input = document.getElementById(`${type}NextUnlock`);
+            input.value = formatDateForInput(date);
+          }
+        } catch (error) {
+          console.error(`Error loading ${type} countdown:`, error);
+        }
+      }
+    }
+
+    async function updateCountdown(type) {
+      const input = document.getElementById(`${type}NextUnlock`);
+      const dateValue = new Date(input.value);
+
+      if (!dateValue || isNaN(dateValue)) {
+        showError('Invalid date');
+        return;
+      }
+
+      try {
+        await setDoc(doc(db, 'settings', type), {
+          nextUnlock: Timestamp.fromDate(dateValue),
+          updatedAt: Timestamp.now()
+        }, { merge: true });
+
+        showSuccess(`${type} countdown updated!`);
+      } catch (error) {
+        showError('Error updating countdown: ' + error.message);
+      }
+    }
+
+    async function saveGlobalSettings() {
+      try {
+        const interval = document.getElementById('portalInterval').value;
+        const batchSize = document.getElementById('portalBatchSize').value;
+
+        await setDoc(doc(db, 'settings', 'global'), {
+          portalInterval: parseInt(interval),
+          portalBatchSize: parseInt(batchSize),
+          updatedAt: Timestamp.now()
+        }, { merge: true });
+
+        showSuccess('Global settings saved!');
+      } catch (error) {
+        showError('Error saving settings: ' + error.message);
+      }
+    }
+
+    async function initializeDatabase() {
+      if (!confirm('⚠️ This will initialize/reset all Firestore collections. Continue?')) return;
+
+      try {
+        showSuccess('Initializing database... Please wait.');
+
+        // Initialize Portal (800)
+        const portalBatch = writeBatch(db);
+        for (let i = 1; i <= 800; i++) {
+          const docRef = doc(db, 'portal', String(i));
+          portalBatch.set(docRef, {
+            id: i,
+            unlocked: i <= 111, // First 111 unlocked
+            createdAt: Timestamp.now()
+          });
+        }
+        await portalBatch.commit();
+
+        // Initialize Circle (80)
+        const circleBatch = writeBatch(db);
+        for (let i = 1; i <= 80; i++) {
+          const docRef = doc(db, 'circle', String(i));
+          circleBatch.set(docRef, {
+            id: i,
+            unlocked: false,
+            createdAt: Timestamp.now()
+          });
+        }
+        await circleBatch.commit();
+
+        // Initialize Infinite (8)
+        const infiniteBatch = writeBatch(db);
+        for (let i = 1; i <= 8; i++) {
+          const docRef = doc(db, 'infinite', String(i));
+          infiniteBatch.set(docRef, {
+            id: i,
+            unlocked: false,
+            createdAt: Timestamp.now()
+          });
+        }
+        await infiniteBatch.commit();
+
+        // Initialize Settings
+        const nextWeek = new Date();
+        nextWeek.setDate(nextWeek.getDate() + 8);
+
+        await setDoc(doc(db, 'settings', 'portal'), {
+          nextUnlock: Timestamp.fromDate(nextWeek),
+          updatedAt: Timestamp.now()
+        });
+
+        await setDoc(doc(db, 'settings', 'circle'), {
+          nextUnlock: Timestamp.fromDate(nextWeek),
+          updatedAt: Timestamp.now()
+        });
+
+        await setDoc(doc(db, 'settings', 'infinite'), {
+          nextUnlock: Timestamp.fromDate(nextWeek),
+          updatedAt: Timestamp.now()
+        });
+
+        await setDoc(doc(db, 'settings', 'global'), {
+          portalInterval: 8,
+          portalBatchSize: 111,
+          updatedAt: Timestamp.now()
+        });
+
+        showSuccess('✅ Database initialized successfully! Reload the page.');
+        setTimeout(() => window.location.reload(), 2000);
+      } catch (error) {
+        showError('Error initializing database: ' + error.message);
+      }
+    }
+
+    function formatDateForInput(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      return `${year}-${month}-${day}T${hours}:${minutes}`;
+    }
+
+    function showSuccess(msg) {
+      const el = document.getElementById('successMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 3000);
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => el.style.display = 'none', 5000);
+    }
+  </script>
+</body>
+</html>

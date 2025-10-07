@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Terms of Ascension – Wallet Connection</title>
+<meta name="description" content="Read and accept the Terms of Ascension before connecting your wallet and accessing the NFTs.">
+<link rel="canonical" href="https://www.456collectorclub.com/terms.html">
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wallet Connection Terms | Numb8</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at center, #0a001a, #000);
+      color: #fff;
+      text-align: center;
+      padding: 40px;
+    }
+    .security-card {
+      max-width: 900px;
+      margin: 80px auto;
+      padding: 30px;
+      background: rgba(20, 20, 40, 0.6);
+      border-radius: 20px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 25px rgba(165, 92, 255, 0.5);
+      text-align: left;
+    }
+    .security-card h1 {
+      text-align: center;
+      font-size: 2.2em;
+      margin-bottom: 20px;
+      color: #a55cff;
+      text-shadow: 0 0 15px #a55cff;
+    }
+    .security-card h2 {
+      margin-top: 20px;
+      color: #9cf;
+    }
+    .security-card ul {
+      margin: 10px 0 20px 20px;
+      line-height: 1.6;
+    }
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 50, 0.6);
+      border: 1px solid #a55cff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 12px #a55cff;
+    }
+  </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://www.456collectorclub.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Manifesto",
+      "item": "https://www.456collectorclub.com/manifesto.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "The Portal",
+      "item": "https://www.456collectorclub.com/the-portal.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "The Circle",
+      "item": "https://www.456collectorclub.com/the-echoes-circle.html"
+    },
+    {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "The Infinite",
+      "item": "https://www.456collectorclub.com/the-infinite.html"
+    }
+  ]
+}
+</script>
+</head>
+<body class="" class="cosmic-bg" style="background: url('assets/images/numb8-cosmic-bg.webp') no-repeat center center fixed; background-size: cover;">
+
+  <a href="index.html" class="back-btn">Back to Home</a>
+  <div class="security-card" style="max-width:600px;margin:80px auto;text-align:center;">
+<h1>Terms of Ascension</h1>
+<p>By connecting your wallet, you enter the path of ascension. You acknowledge that:</p>
+<ul>
+  <li>Numb8 will only read your public blockchain data (address, NFTs) — never your private keys or funds.</li>
+  <li>108 Studio Art never has access to your wallet custody or private keys.</li>
+  <li>All blockchain transactions are final, irreversible, and your sole responsibility.</li>
+  <li>Progression through The Portal, The Circle, and The Infinite depends on your NFT holdings and community engagement.</li>
+  <li>Physical artifacts (prints, sculptures) may be linked via NFC or redemption codes.</li>
+  <li>108 Studio Art is not liable for losses caused by third-party services, failed transactions, or compromised wallets.</li>
+</ul>
+<p><em>To connect is not to surrender — it is to prove your belonging.</em></p>
+<button id="acceptBtn" class="wallet-btn">Accept and Ascend</button>
+</div>
+
+
+<footer style="text-align:center; margin-top:60px; padding:20px;">
+  <p style="font-family:Orbitron, sans-serif; font-size:0.9em; color:#fff; text-shadow:0 0 10px #00ccff, 0 0 20px #a55cff;">
+    © 2025 108 Studio Art | 
+    <a href="security.html" style="color:#00ccff; text-decoration:none; text-shadow:0 0 5px #00ccff;">Privacy Policy</a> | 
+    <a href="termsgeneral.html" style="color:#a55cff; text-decoration:none; text-shadow:0 0 5px #a55cff;">General Terms of Service</a>
+  </p>
+</footer>
+
+
+<script>
+document.getElementById("acceptBtn").addEventListener("click", function() {
+  const params = new URLSearchParams(window.location.search);
+  const dest = params.get("from") || "index.html";
+  window.location.href = dest;
+});
+</script>
+
+</body>
+</html>

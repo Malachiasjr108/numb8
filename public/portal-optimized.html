@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Portal - 800 Echoes | Numb8</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="portal.css">
+  <style>
+    .ring-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+    .nft-ring-portal{position:relative;overflow:hidden;transition:all 0.3s ease;}
+    .nft-ring-portal.locked{opacity:0.3;filter:grayscale(100%);}
+    .nft-ring-portal.unlocked{cursor:pointer;}
+    .nft-ring-portal.unlocked:hover{transform:scale(1.1);box-shadow:0 0 20px rgba(0,255,255,0.6);}
+  </style>
+</head>
+<body class="cosmic-bg" style="background: url('assets/images/numb8-cosmic-bg.webp') no-repeat center center fixed; background-size: cover;">
+  
+  <div class="user-status">
+    <img src="https://www.gravatar.com/avatar/?d=identicon" alt="Wallet Avatar" class="wallet-avatar">
+    <span class="wallet-name">3Jcollector</span>
+    <button class="points-btn">888 ✦</button>
+  </div>
+  
+  <div class="echo-ranking desktop-only">
+    <h3>Leaderboard</h3>
+    <table>
+      <tr><th>Rank</th><th>Name</th><th>Points</th></tr>
+      <tr><td>1</td><td>StarGazer.eth</td><td>2450 ✦</td></tr>
+      <tr><td>2</td><td>Luna88</td><td>1900 ✦</td></tr>
+      <tr><td>3</td><td>3Jcollector</td><td>888 ✦</td></tr>
+      <tr><td>4</td><td>CosmosArt</td><td>720 ✦</td></tr>
+      <tr><td>5</td><td>NebulaX</td><td>650 ✦</td></tr>
+    </table>
+    <button class="points-btn action" onclick="window.location.href='echo-portal.html'">My Echo Points</button>
+  </div>
+
+  <a href="index.html" class="back-btn">⟵ Back to Home</a>
+  
+  <section class="content">
+    <div class="lore">
+      <h1>The Portal</h1>
+      <p>Welcome inside the Portal. 800 Echoes await — fragments of cosmic truth revealed only to those who dare to connect.</p>
+    </div>
+    
+    <div class="narrative">
+      <p>The Portal opens in cycles. Every 8 days, 111 new Echoes reveal themselves to those who dare to connect. 
+      Each Echo you collect draws you closer to <strong>The Circle</strong>. 
+      This is the first step on a path that leads through Eclipses and, for the chosen few, into <strong>The Infinite</strong>.</p>
+    </div>
+
+    <div class="counter-box">
+      <h2>Next 111 Echoes unlock in:</h2>
+      <div id="countdown-portal" class="countdown">Loading...</div>
+    </div>
+
+    <div class="nft-grid-portal" id="portalGrid">
+      <!-- Circles will be generated dynamically -->
+    </div>
+  </section>
+
+  <footer style="text-align:center; margin-top:60px; padding:20px;">
+    <p style="font-family:Orbitron, sans-serif; font-size:0.9em; color:#fff; text-shadow:0 0 10px #00ccff, 0 0 20px #a55cff;">
+      © 2025 108 Studio Art | 
+      <a href="security.html" style="color:#00ccff; text-decoration:none;">Privacy Policy</a> | 
+      <a href="termsgeneral.html" style="color:#a55cff; text-decoration:none;">Terms of Service</a>
+    </p>
+  </footer>
+
+  <script type="module">
+    import { db } from './firebase-config.js';
+    import { collection, getDocs, doc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    // Generate 800 circles dynamically
+    const portalGrid = document.getElementById('portalGrid');
+    const singleImagePath = 'assets/portal/1/image.webp';
+    let echoImages = {};
+
+    // Load custom echo images from API
+    async function loadEchoImages() {
+      try {
+        const response = await fetch('/api/echoes/list');
+        const data = await response.json();
+        
+        if (data.images && Array.isArray(data.images)) {
+          data.images.forEach(img => {
+            echoImages[img.echoNumber] = img.imageUrl;
+          });
+        }
+      } catch (error) {
+        console.error('Error loading custom echo images:', error);
+      }
+    }
+
+    async function loadPortalCircles() {
+      try {
+        // Load custom images first
+        await loadEchoImages();
+
+        // Get settings for countdown
+        const settingsDoc = await getDoc(doc(db, 'settings', 'portal'));
+        const settings = settingsDoc.data();
+        
+        if (settings && settings.nextUnlock) {
+          startCountdown('countdown-portal', settings.nextUnlock.toDate());
+        }
+
+        // Get portal circles status
+        const portalSnapshot = await getDocs(collection(db, 'portal'));
+        const portalData = {};
+        portalSnapshot.forEach(doc => {
+          portalData[doc.id] = doc.data();
+        });
+
+        // Generate 800 circles
+        for (let i = 1; i <= 800; i++) {
+          const circleDiv = document.createElement('div');
+          const isUnlocked = portalData[i] && portalData[i].unlocked;
+          
+          // Use custom image if available, otherwise use default
+          const imageSrc = echoImages[i] || singleImagePath;
+          
+          circleDiv.className = `nft-ring-portal ${isUnlocked ? 'unlocked' : 'locked'}`;
+          circleDiv.innerHTML = `<img class="ring-photo" alt="Echo ${i}" src="${imageSrc}" loading="lazy">`;
+          
+          if (isUnlocked) {
+            circleDiv.onclick = () => alert(`Echo ${i} - Available for collection!`);
+          }
+          
+          portalGrid.appendChild(circleDiv);
+        }
+      } catch (error) {
+        console.error('Error loading portal:', error);
+        // Fallback: show all as locked
+        for (let i = 1; i <= 800; i++) {
+          const circleDiv = document.createElement('div');
+          circleDiv.className = 'nft-ring-portal locked';
+          const imageSrc = echoImages[i] || singleImagePath;
+          circleDiv.innerHTML = `<img class="ring-photo" alt="Echo ${i}" src="${imageSrc}" loading="lazy">`;
+          portalGrid.appendChild(circleDiv);
+        }
+      }
+    }
+
+    function startCountdown(elementId, targetDate) {
+      const countdownEl = document.getElementById(elementId);
+      
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate.getTime() - now;
+
+        if (distance < 0) {
+          countdownEl.textContent = 'UNLOCKING NOW!';
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        countdownEl.textContent = `${days} DAYS : ${hours} HOURS : ${minutes} MIN : ${seconds} SEC`;
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+    }
+
+    loadPortalCircles();
+  </script>
+</body>
+</html>

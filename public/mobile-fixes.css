@@ -1,0 +1,350 @@
+
+/* ===================================
+   MOBILE FIXES - Numb8
+   Classes específicas para mobile sem afetar desktop
+   =================================== */
+
+/* DESKTOP ONLY - Classes que aparecem APENAS no desktop */
+.desktop-only {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* MOBILE ONLY - Classes que aparecem APENAS no mobile */
+.mobile-only {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* ESCONDER LEADERBOARD NO MOBILE */
+.echo-ranking {
+  display: block !important; /* Mostra no desktop */
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* ===================================
+   MEDIA QUERIES - Mobile (768px e abaixo)
+   =================================== */
+@media (max-width: 768px) {
+  
+  /* ESCONDER elementos desktop no mobile - FORÇADO */
+  .desktop-only,
+  div.desktop-only,
+  .echo-ranking.desktop-only {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* MOSTRAR elementos mobile */
+  .mobile-only {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* ESCONDER LEADERBOARD completamente no mobile - TODAS AS VARIAÇÕES */
+  .echo-ranking,
+  div.echo-ranking,
+  .echo-ranking.desktop-only,
+  div[class*="echo-ranking"],
+  div[class*="leaderboard"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* FIX NAVBAR - Melhorias específicas para iPhone */
+  .navbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 8px 0 !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    background: rgba(10, 10, 25, 0.95) !important;
+    z-index: 9999 !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  
+  .nav-container {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 12px !important;
+    padding: 8px 12px !important;
+    flex-wrap: nowrap !important;
+    min-width: max-content !important;
+  }
+  
+  .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-size: 0.8rem !important;
+    white-space: nowrap !important;
+    padding: 6px 10px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .nav-link i {
+    width: 14px !important;
+    height: 14px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .nav-link span {
+    font-size: 0.8rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  /* Ajustar padding do body para compensar navbar menor */
+  body {
+    padding-top: 55px !important;
+  }
+  
+  /* FIX HERO - Melhorar visualização no mobile */
+  .hero {
+    padding: 40px 15px 30px !important;
+    background-size: cover !important;
+  }
+  
+  .hero-cta h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.3 !important;
+    margin-top: 15px !important;
+  }
+  
+  .hero-card {
+    border-radius: 12px !important;
+  }
+  
+  /* FIX METAVERSE CARDS - Melhorar layout mobile */
+  .metaverse-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 20px !important;
+    padding: 0 15px !important;
+  }
+  
+  .metaverse-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 280px !important;
+  }
+  
+  /* FIX CÍRCULOS NFT - Ajustar grid no mobile */
+  .nft-grid-circle {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    padding: 20px 10px !important;
+  }
+  
+  .nft-ring-circle {
+    width: 90px !important;
+    height: 90px !important;
+    margin: 5px !important;
+  }
+  
+  /* FIX PORTAL NFT GRID */
+  .nft-grid-portal {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+    padding: 20px 10px !important;
+  }
+  
+  .nft-ring-portal {
+    width: 70px !important;
+    height: 70px !important;
+    font-size: 0.7rem !important;
+  }
+  
+  /* FIX INFINITE GRID */
+  .nft-grid-oracles {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+    padding: 20px 10px !important;
+  }
+  
+  .nft-ring.oracle {
+    width: 140px !important;
+    height: 140px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* FIX TEXTOS E CONTEÚDO */
+  .content {
+    padding: 40px 20px !important;
+  }
+  
+  .lore h1 {
+    font-size: 1.8rem !important;
+  }
+  
+  .narrative {
+    font-size: 0.95rem !important;
+    padding: 15px 20px !important;
+  }
+  
+  .counter-box h2 {
+    font-size: 1.2rem !important;
+  }
+  
+  .countdown {
+    font-size: 1.1rem !important;
+  }
+  
+  /* FIX BOTÕES */
+  .btn {
+    padding: 10px 16px !important;
+    font-size: 0.9rem !important;
+    margin: 5px !important;
+  }
+  
+  .glass-button {
+    padding: 8px 18px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .back-btn {
+    top: 60px !important;
+    right: 10px !important;
+    padding: 6px 12px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* FIX RARIDADES */
+  .rarity-grid {
+    grid-template-columns: 1fr !important;
+    gap: 15px !important;
+  }
+  
+  .rarity {
+    padding: 15px !important;
+  }
+  
+  /* FIX CARDS GERAIS */
+  .cards {
+    grid-template-columns: 1fr !important;
+    gap: 18px !important;
+  }
+  
+  .glass-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 200px !important;
+  }
+  
+  /* FIX FOOTER */
+  footer {
+    margin-top: 40px !important;
+    padding: 15px !important;
+  }
+  
+  footer p {
+    font-size: 0.8rem !important;
+  }
+  
+  /* FIX USER STATUS (se existir) */
+  .user-status {
+    top: 65px !important;
+    left: 10px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .wallet-avatar {
+    width: 28px !important;
+    height: 28px !important;
+  }
+  
+  /* FIX ECHO POINTS SECTIONS */
+  .echo-points {
+    padding: 20px 15px !important;
+    margin-top: 40px !important;
+    margin-bottom: 40px !important;
+  }
+  
+  .echo-missions,
+  .echo-benefits {
+    padding: 15px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  /* FIX MANIFESTO */
+  .manifesto-card {
+    padding: 25px 20px !important;
+    max-width: 95% !important;
+  }
+  
+  .manifesto-card h1 {
+    font-size: 1.6rem !important;
+  }
+  
+  /* FIX SECTIONS PADDING */
+  section {
+    padding: 50px 15px !important;
+  }
+  
+  /* FIX H1, H2 HEADINGS */
+  h1 {
+    font-size: 1.8rem !important;
+  }
+  
+  h2 {
+    font-size: 1.4rem !important;
+  }
+  
+  /* SMOOTH SCROLLING */
+  html {
+    scroll-padding-top: 70px;
+  }
+  
+}
+
+/* ===================================
+   MEDIA QUERIES - Tablets (769px - 1024px)
+   =================================== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  
+  .nav-container {
+    gap: 25px !important;
+  }
+  
+  .nav-link {
+    font-size: 0.95rem !important;
+  }
+  
+  .metaverse-card {
+    width: 400px !important;
+    height: 350px !important;
+  }
+  
+  .nft-grid-circle {
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
+  
+  .nft-grid-portal {
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+  
+}
